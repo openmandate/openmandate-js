@@ -1,0 +1,43 @@
+{
+  "name": "openmandate",
+  "version": "0.1.1",
+  "description": "TypeScript/JavaScript SDK for OpenMandate",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "typescript": "^5.4.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openmandate/openmandate-js"
+  },
+  "homepage": "https://openmandate.ai",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "openmandate",
+    "matching",
+    "infrastructure",
+    "api",
+    "sdk"
+  ]
+}
