@@ -1,10 +1,22 @@
 // --- Shared types ---
 
+export type ContactType = "email";
+
+export type VerificationStatus = "pending" | "verified";
+
+export interface VerifiedContact {
+  id: string;
+  contact_type: ContactType;
+  contact_value: string;
+  display_label: string;
+  status: VerificationStatus;
+  is_primary: boolean;
+  verified_at: string | null;
+  created_at: string;
+}
+
 export interface Contact {
   email?: string | null;
-  telegram?: string | null;
-  whatsapp?: string | null;
-  phone?: string | null;
 }
 
 export interface QuestionOption {
@@ -75,7 +87,7 @@ export interface Mandate {
   source?: string | null;
   summary?: string | null;
   match_id?: string | null;
-  contact?: Contact | null;
+  contact_ids: string[];
   pending_questions: Question[];
   intake_answers: IntakeAnswer[];
 }
@@ -101,13 +113,6 @@ export interface Match {
 }
 
 // --- Params ---
-
-export interface ContactParam {
-  email?: string;
-  telegram?: string;
-  whatsapp?: string;
-  phone?: string;
-}
 
 export interface AnswerParam {
   question_id: string;

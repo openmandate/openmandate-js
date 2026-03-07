@@ -3,9 +3,9 @@
 The official TypeScript/JavaScript SDK for [OpenMandate](https://openmandate.ai).
 Post mandates, check status, and receive matches through the OpenMandate API.
 
-OpenMandate is matching infrastructure. You post what you need and what you
-offer. An agent works on your behalf, talking to every other agent to find the
-perfect match. You hear back only when both sides match.
+OpenMandate helps founders find cofounders and early teammates beyond their
+network. Describe what you need and what you offer. OpenMandate keeps evaluating
+fit over time and introduces both sides when there is real mutual match.
 
 ## Installation
 
@@ -21,10 +21,8 @@ import { OpenMandate } from "openmandate";
 const client = new OpenMandate({ apiKey: "om_live_..." });
 
 // Create a mandate
-const mandate = await client.mandates.create({
-  category: "services",
-  contact: { email: "alice@example.com" },
-});
+// Auto-attaches your primary verified contact
+const mandate = await client.mandates.create({ category: "services" });
 console.log(`Created: ${mandate.id}, status: ${mandate.status}`);
 
 // Answer intake questions
@@ -79,15 +77,12 @@ const client = new OpenMandate({
 Create a new mandate.
 
 ```ts
-const mandate = await client.mandates.create({
-  category: "services",
-  contact: { email: "me@co.com", telegram: "@me" },
-});
+const mandate = await client.mandates.create({ category: "services" });
 ```
 
 **Parameters:**
 - `category` (string, optional): Freeform category hint.
-- `contact` (object, optional): Contact info with keys `email`, `telegram`, `whatsapp`, `phone`.
+- `contact_ids` (string[], optional): Verified contact IDs to attach. If omitted, your primary verified contact is auto-selected.
 
 **Returns:** `Mandate`
 
@@ -198,6 +193,87 @@ const mandate = await client.mandates.waitForMatch("mnd_abc123", { timeout: 600_
 **Returns:** `Mandate` with status `matched`
 
 **Throws:** `APITimeoutError` if timeout elapses
+
+---
+
+### Contacts
+
+#### `client.contacts.list(options?)`
+
+List your verified contacts.
+
+```ts
+for await (const contact of client.contacts.list()) {
+  console.log(`${contact.contact_value} (${contact.status})`);
+}
+```
+
+**Returns:** `PagePromise<Page<VerifiedContact>, VerifiedContact>`
+
+---
+
+#### `client.contacts.add(options)`
+
+Add a new contact. Sends a verification code.
+
+```ts
+const contact = await client.contacts.add({
+  contact_type: "email",
+  contact_value: "work@example.com",
+  display_label: "Work",
+});
+// contact.status === "pending" — check email for OTP
+```
+
+**Returns:** `VerifiedContact` with `status: "pending"`
+
+---
+
+#### `client.contacts.verify(contactId, options)`
+
+Verify a contact with the OTP code.
+
+```ts
+const contact = await client.contacts.verify("vc_abc123", { code: "12345678" });
+```
+
+**Returns:** `VerifiedContact` with `status: "verified"`
+
+---
+
+#### `client.contacts.update(contactId, options)`
+
+Update a contact's label or set it as primary.
+
+```ts
+await client.contacts.update("vc_abc123", { is_primary: true });
+```
+
+**Returns:** `VerifiedContact`
+
+---
+
+#### `client.contacts.delete(contactId)`
+
+Delete a contact. Cannot delete your last verified contact.
+
+```ts
+await client.contacts.delete("vc_abc123");
+```
+
+**Returns:** `{ deleted: boolean }`
+
+---
+
+#### `client.contacts.resendOtp(contactId)`
+
+Resend the verification code for a pending contact.
+
+```ts
+await client.contacts.resendOtp("vc_abc123");
+```
+
+**Returns:** `VerifiedContact`
 
 ---
 

@@ -1,5 +1,6 @@
 import { VERSION } from "./version.js";
 import { APIConnectionError, APITimeoutError, makeAPIError } from "./error.js";
+import { Contacts } from "./resources/contacts.js";
 import { Mandates } from "./resources/mandates.js";
 import { Matches } from "./resources/matches.js";
 
@@ -20,6 +21,7 @@ export interface OpenMandateOptions {
 }
 
 export class OpenMandate {
+  readonly contacts: Contacts;
   readonly mandates: Mandates;
   readonly matches: Matches;
 
@@ -43,6 +45,7 @@ export class OpenMandate {
     this._timeout = options.timeout ?? DEFAULT_TIMEOUT;
     this._maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
 
+    this.contacts = new Contacts(this._request.bind(this));
     this.mandates = new Mandates(this._request.bind(this));
     this.matches = new Matches(this._request.bind(this));
   }

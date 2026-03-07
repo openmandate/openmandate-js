@@ -1,5 +1,5 @@
 import type { RequestFn } from "../core.js";
-import type { AnswerParam, ContactParam, CorrectionParam, Mandate, Question } from "../types.js";
+import type { AnswerParam, CorrectionParam, Mandate, Question } from "../types.js";
 import { Page } from "../pagination.js";
 import { PagePromise } from "../page-promise.js";
 import { APITimeoutError } from "../error.js";
@@ -15,13 +15,13 @@ export class Mandates {
    * Create a new mandate.
    *
    * @param options.category - Freeform category hint (e.g. "services", "recruiting").
-   * @param options.contact - Contact information (at least one field recommended).
+   * @param options.contact_ids - IDs of verified contacts to attach to this mandate.
    * @returns The created mandate with initial pending_questions.
    */
-  async create(options: { category?: string; contact?: ContactParam } = {}): Promise<Mandate> {
+  async create(options: { category?: string; contact_ids?: string[] } = {}): Promise<Mandate> {
     const body: Record<string, unknown> = {};
     if (options.category) body.category = options.category;
-    if (options.contact) body.contact = options.contact;
+    if (options.contact_ids?.length) body.contact_ids = options.contact_ids;
     return this._request<Mandate>("POST", "/v1/mandates", { body });
   }
 

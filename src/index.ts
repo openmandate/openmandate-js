@@ -19,6 +19,8 @@ export {
 export { Page } from "./pagination.js";
 export { PagePromise } from "./page-promise.js";
 
+export { Contacts } from "./resources/contacts.js";
+
 export type {
   Mandate,
   MandateStatus,
@@ -26,6 +28,9 @@ export type {
   Match,
   MatchStatus,
   Contact,
+  ContactType,
+  VerifiedContact,
+  VerificationStatus,
   Question,
   QuestionOption,
   QuestionConstraints,
@@ -33,7 +38,6 @@ export type {
   Compatibility,
   Strength,
   Concern,
-  ContactParam,
   AnswerParam,
   CorrectionParam,
 } from "./types.js";
