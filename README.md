@@ -20,12 +20,14 @@ import { OpenMandate } from "openmandate";
 
 const client = new OpenMandate({ apiKey: "om_live_..." });
 
-// Create a mandate
-// Auto-attaches your primary verified contact
-const mandate = await client.mandates.create({ category: "services" });
+// Create a mandate with want + offer
+const mandate = await client.mandates.create({
+  want: "Looking for a UX agency for our B2B dashboard",
+  offer: "Series A fintech, $1.8M ARR, two frontend engineers ready",
+});
 console.log(`Created: ${mandate.id}, status: ${mandate.status}`);
 
-// Answer intake questions
+// Answer follow-up questions
 let current = mandate;
 while (current.pending_questions.length > 0) {
   const answers = current.pending_questions.map((q) => ({
@@ -72,19 +74,24 @@ const client = new OpenMandate({
 
 ### Mandates
 
-#### `client.mandates.create(options?)`
+#### `client.mandates.create(options)`
 
-Create a new mandate.
+Create a new mandate with want and offer.
 
 ```ts
-const mandate = await client.mandates.create({ category: "services" });
+const mandate = await client.mandates.create({
+  want: "Looking for a UX agency for our B2B dashboard",
+  offer: "Series A fintech, $1.8M ARR, two frontend engineers ready",
+});
 ```
 
 **Parameters:**
-- `category` (string, optional): Freeform category hint.
-- `contact_ids` (string[], optional): Verified contact IDs to attach. If omitted, your primary verified contact is auto-selected.
+- `want` (string, required): What you are looking for. Minimum 20 characters.
+- `offer` (string, required): What you bring to the table. Minimum 20 characters.
 
-**Returns:** `Mandate`
+Primary verified contact is auto-selected.
+
+**Returns:** `Mandate` with follow-up questions in `pending_questions`.
 
 ---
 
@@ -102,22 +109,28 @@ const mandate = await client.mandates.retrieve("mnd_abc123");
 
 #### `client.mandates.list(options?)`
 
-List mandates with optional filtering. Returns a `PagePromise` — both awaitable and async-iterable.
+List mandates with optional filtering. Returns open mandates by default (excludes closed). Returns a `PagePromise` — both awaitable and async-iterable.
 
 ```ts
+// List open mandates (default — excludes closed)
+const page = await client.mandates.list();
+
+// List only closed mandates
+const closed = await client.mandates.list({ status: "closed" });
+
 // Iterate directly (no double-await needed)
 for await (const mandate of client.mandates.list({ status: "active" })) {
   console.log(mandate.id);
 }
 
 // Or await to get a Page object
-const page = await client.mandates.list({ status: "active", limit: 10 });
-console.log(page.items);
-console.log(page.hasNextPage());
+const activePage = await client.mandates.list({ status: "active", limit: 10 });
+console.log(activePage.items);
+console.log(activePage.hasNextPage());
 ```
 
 **Parameters:**
-- `status` (string, optional): Filter by status (`intake`, `processing`, `active`, `pending_input`, `matched`, `closed`).
+- `status` (string, optional): Filter by status (`intake`, `active`, `pending_input`, `matched`, `closed`). Returns open mandates by default.
 - `limit` (number, optional): Max items per page.
 - `nextToken` (string, optional): Pagination cursor.
 

@@ -12,17 +12,16 @@ export class Mandates {
   }
 
   /**
-   * Create a new mandate.
+   * Create a new mandate with want and offer.
    *
-   * @param options.category - Freeform category hint (e.g. "services", "recruiting").
-   * @param options.contact_ids - IDs of verified contacts to attach to this mandate.
-   * @returns The created mandate with initial pending_questions.
+   * @param options.want - What you are looking for (min 20 characters).
+   * @param options.offer - What you bring to the table (min 20 characters).
+   * @returns The created mandate with follow-up questions.
    */
-  async create(options: { category?: string; contact_ids?: string[] } = {}): Promise<Mandate> {
-    const body: Record<string, unknown> = {};
-    if (options.category) body.category = options.category;
-    if (options.contact_ids?.length) body.contact_ids = options.contact_ids;
-    return this._request<Mandate>("POST", "/v1/mandates", { body });
+  async create(options: { want: string; offer: string }): Promise<Mandate> {
+    return this._request<Mandate>("POST", "/v1/mandates", {
+      body: { want: options.want, offer: options.offer },
+    });
   }
 
   /**
@@ -36,6 +35,9 @@ export class Mandates {
 
   /**
    * List mandates with optional filtering.
+   *
+   * Returns open mandates by default (excludes closed).
+   * Pass `status: "closed"` to list closed mandates.
    *
    * Supports auto-pagination via async iteration:
    * ```ts
