@@ -58,7 +58,8 @@ export interface Concern {
 }
 
 export interface Compatibility {
-  score: number;
+  grade: string;
+  grade_label: string;
   summary: string;
   strengths: Strength[];
   concerns: Concern[];

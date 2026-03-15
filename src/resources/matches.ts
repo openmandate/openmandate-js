@@ -16,7 +16,7 @@ export class Matches {
    * Supports auto-pagination via async iteration:
    * ```ts
    * for await (const match of client.matches.list()) {
-   *   console.log(match.id, match.compatibility?.score);
+   *   console.log(match.id, match.compatibility?.grade_label);
    * }
    * ```
    */

@@ -43,7 +43,7 @@ console.log(`Matched! Match ID: ${matched.match_id}`);
 
 // View and accept the match
 const match = await client.matches.retrieve(matched.match_id!);
-console.log(`Score: ${match.compatibility?.score}`);
+console.log(`Grade: ${match.compatibility?.grade_label}`);
 await client.matches.accept(match.id);
 ```
 
@@ -316,7 +316,7 @@ Get a match by ID.
 
 ```ts
 const match = await client.matches.retrieve("m_abc123");
-console.log(match.compatibility?.score);
+console.log(match.compatibility?.grade_label);
 ```
 
 **Returns:** `Match`
