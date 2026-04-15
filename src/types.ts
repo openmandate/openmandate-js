@@ -75,7 +75,7 @@ export type MandateStatus =
   | "matched"
   | "closed";
 
-export type CloseReason = "user_closed" | "matched";
+export type CloseReason = "user_closed" | "matched" | "match_success" | "expired";
 
 export interface Mandate {
   id: string;
@@ -88,6 +88,9 @@ export interface Mandate {
   source?: string | null;
   summary?: string | null;
   match_id?: string | null;
+  activated_at?: string | null;
+  round_intro?: string | null;
+  intake_ready_at?: string | null;
   contact_ids: string[];
   pending_questions: Question[];
   intake_answers: IntakeAnswer[];
@@ -95,12 +98,15 @@ export interface Mandate {
 
 // --- Match ---
 
+export type MatchOutcome = "succeeded" | "ongoing" | "failed";
+
 export type MatchStatus =
   | "pending"
   | "accepted"
   | "confirmed"
   | "declined"
-  | "closed";
+  | "closed"
+  | "expired";
 
 export interface Match {
   id: string;
@@ -111,6 +117,10 @@ export interface Match {
   confirmed_at?: string | null;
   compatibility?: Compatibility | null;
   contact?: Contact | null;
+  outcome?: string | null;
+  outcome_at?: string | null;
+  show_outcome_prompt?: boolean;
+  force_final_outcome?: boolean;
 }
 
 // --- Params ---

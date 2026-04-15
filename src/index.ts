@@ -26,6 +26,7 @@ export type {
   MandateStatus,
   CloseReason,
   Match,
+  MatchOutcome,
   MatchStatus,
   Contact,
   ContactType,

@@ -69,4 +69,16 @@ export class Matches {
   async decline(matchId: string): Promise<Match> {
     return this._request<Match>("POST", `/v1/matches/${matchId}/decline`);
   }
+
+  /**
+   * Submit an outcome for a confirmed match.
+   *
+   * @param matchId - The match ID.
+   * @param outcome - The outcome value (e.g. "succeeded", "ongoing", "failed").
+   */
+  async submitOutcome(matchId: string, outcome: string): Promise<Match> {
+    return this._request<Match>("POST", `/v1/matches/${matchId}/outcome`, {
+      body: { outcome },
+    });
+  }
 }
